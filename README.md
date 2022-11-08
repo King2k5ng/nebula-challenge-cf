@@ -7,7 +7,7 @@ In this challenge, i was required to create a website where a visitor can provid
 
 ## Proposed Solution
 
-![Proposed solution] (/nebula-challenge-cf/nebula_project.png)
+![Proposed solution] (./nebula_project.png)
 
 
 In this solution, I create a webpage that is hosted on an S3 bucket and served using a CloudFront distribution. 
