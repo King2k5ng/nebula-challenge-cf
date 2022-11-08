@@ -25,4 +25,9 @@ A cloudFormation template is used to create the resources needed for the solutio
 * AWS account
 * AWS CLI
 * linux system to run script to automate deployment of resources and uploading website assets to S3 bucket.
-* Alternatvly Windows user's can istall Jq to run script using git bash. 
+* Alternatively Windows user's can istall jq to run the script (setup.sh) using git bash.
+
+### Deploying Solution
+**Linux Users** can run this can run the Script "setup.sp" in the terminal, fill in some  parameters when promted, and the script would automate the deployment of your resources. The would also automate the loading of your objects (website assets folder) to the S3 bucket.
+
+**Windows Users** can also repeat the steps above with the useing git bash after completeing the intallation of jq. Alternatively Windows users can also log into the AWS mangement console and upload the template to cloudformation to deloy the resources. However with this method you would also have to upload the webpage files to the S3 Bucket using the management console too. 
