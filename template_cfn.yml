@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Cloudformation Template for Nebula Project static website deploy on s3 through cloudfront.
+Parameters:
+  BucketName:
+    Description: Bucket name example nebula.kingsley.me
+    Type: String
+
+Resources:
+  NebulaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  NebulaBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BucketName 
+      PolicyDocument: 
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref 'BucketName', /*]]
+
+  NebulaCloudfront:
+    Type: "AWS::CloudFront::Distribution" 
+    Properties:
+      DistributionConfig:
+        Comment: Cloudfront Distribution pointing to Nebula S3 bucket.
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - GET
+          - HEAD
+          Compress: true
+          ForwardedValues: 
+            QueryString: true
+            Cookies:
+              Forward: none
+          TargetOriginId: NebulaOrigin  
+          ViewerProtocolPolicy: allow-all
+        DefaultRootObject: index.html 
+        Enabled: true
+        HttpVersion: 'http2'
+        Origins: 
+        - DomainName: !Select [2, !Split ["/", !GetAtt NebulaBucket.WebsiteURL]] 
+          Id: NebulaOrigin   
+          CustomOriginConfig: 
+            OriginProtocolPolicy: http-only 
+        PriceClass: PriceClass_All
+
+Outputs:
+  CloudfrontEndpoint:
+    Description: Endpoint for Nebula Cloudfront
+    Value: !GetAtt NebulaCloudfront.DomainName
